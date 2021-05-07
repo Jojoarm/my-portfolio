@@ -11,6 +11,7 @@
 
 html {
   scroll-behavior: smooth;
+  overflow-x: hidden;
 }
 
 /* custom scroll bar */
@@ -62,7 +63,23 @@ section .title {
   margin-bottom: 60px;
   padding-bottom: 20px;
   font-family: "Ubuntu", sans-serif;
+  opacity: 0;
+  transform: translateY(4em) rotateZ(-5deg);
+  transition: transform 4s 0.25s cubic-bezier(0, 1, 0.3, 1),
+    opacity 0.3s 0.25s ease-out;
+  will-change: transform, opacity;
 }
+
+.is-visible {
+  animation: fade-in-down ease-in 0.5s 0.5s forwards;
+  /* opacity: 1; */
+  transform: rotateZ(-2deg);
+}
+
+.is-fade-in {
+  animation: fade-in-up ease-in 0.5s 1s forwards;
+}
+
 section .title::before {
   content: "";
   position: absolute;
@@ -82,6 +99,8 @@ section .title::after {
   padding: 0 5px;
   background: #fff;
   transform: translateX(-50%);
+  opacity: 0;
+  animation: fade-in-left ease-in 0.5s 1.5s forwards;
 }
 
 /* navbar styling */
@@ -94,7 +113,7 @@ section .title::after {
   transition: all 0.3s ease;
   background: black;
   opacity: 0;
-  animation: fade-in-down ease-in 0.5s 1s forwards;
+  animation: fade-in-up ease-in 0.5s 1s forwards;
 }
 .navbar.sticky {
   padding: 15px 0;
@@ -121,6 +140,10 @@ section .title::after {
   align-items: center;
   align-content: center;
   font-size: 14px;
+  animation: bounce 1s;
+  animation-direction: alternate;
+  animation-timing-function: cubic-bezier(0.5, 0.05, 1, 0.5);
+  animation-iteration-count: infinite;
 }
 .logo__container .fa-drupal {
   align-self: center;
@@ -166,8 +189,37 @@ section .title::after {
   cursor: pointer;
   display: none;
 }
+.scroll-up-btn {
+  position: fixed;
+  height: 45px;
+  width: 42px;
+  background: black;
+  right: 30px;
+  bottom: 10px;
+  text-align: center;
+  line-height: 45px;
+  color: #fff;
+  z-index: 9999;
+  font-size: 30px;
+  border-radius: 10px;
+  border-bottom-width: 2px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  animation: bounce 0.8s;
+  animation-direction: alternate;
+  animation-timing-function: cubic-bezier(0.5, 0.05, 1, 0.5);
+  animation-iteration-count: infinite;
+}
+.scroll-up-btn.show {
+  bottom: 30px;
+  opacity: 1;
+  pointer-events: auto;
+}
+.scroll-up-btn:hover {
+  filter: brightness(90%);
+}
 
-/* Home Section */
+/* ========================= Home Section =================== */
 .home {
   width: 100%;
   height: 100vh;
@@ -262,7 +314,7 @@ section .title::after {
   font-weight: 500;
 }
 
-/* About section */
+/* =========================== About section ====================== */
 .about .title::after {
   content: "Who I am";
 }
@@ -275,6 +327,7 @@ section .title::after {
   object-fit: contain;
   box-shadow: 2px 2px 1rem rgba(0, 0, 0, 0.3);
   border-radius: 6px;
+  opacity: 0;
 }
 .about .about-content .right {
   width: 55%;
@@ -366,17 +419,20 @@ section .title::after {
   /* font-weight: 500; */
 }
 
-/* services section styling */
-.services {
+/* ========================== services section styling ======================== */
+.services,
+.contact {
   color: #fff;
   background: #111;
   min-height: 100vh;
 }
 
-.services .title::before {
+.services .title::before,
+.contact .title::before {
   background: #fff;
 }
-.services .title::after {
+.services .title::after,
+.contact .title::after {
   background: #111;
   content: "What I Offer";
 }
@@ -387,8 +443,8 @@ section .title::after {
 .card__box {
   transition: all 0.3s ease;
   border-bottom: 1px solid white;
-  /* box-shadow: 2px 2px 1rem rgba(245, 245, 245, 0.3); */
   box-shadow: 2px 0px 6px rgba(245, 245, 245, 0.3);
+  opacity: 0;
 }
 .card__box:hover .box {
   transform: scale(1.05);
@@ -407,9 +463,10 @@ section .title::after {
   margin: 10px 0 7px 0;
 }
 
-#services {
+#services,
+#contact {
   width: 100%;
-  min-height: 100%;
+  min-height: 100vh;
   background: #111;
   padding: 20px 0;
 }
@@ -425,7 +482,6 @@ section .title::after {
   width: 350px;
   border-radius: 4px;
   background: #222;
-  /* position: relative; */
   color: #fff;
   line-height: 1.4;
   display: flex;
@@ -449,22 +505,22 @@ section .title::after {
   margin: 10px;
   font-weight: 600;
 }
-.vd:hover,
-.fd:hover,
-.cm:hover {
+.card__box:hover {
   transform: scale(1.075);
   transition: 0.2s ease-in;
   cursor: pointer;
 }
 
-/* Project Section*/
+/* ==================== Project Section ======================= */
 .projects {
   background: whitesmoke;
   min-height: 100vh;
+  width: 100%;
   font-family: "Ubuntu", sans-serif;
   display: flex;
   flex-direction: column;
   align-items: center;
+  text-align: center;
 }
 
 .projects .title::after {
@@ -479,7 +535,7 @@ section .title::after {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 10px;
+  margin: 10px 0px;
   padding-bottom: 20px;
 }
 
@@ -508,48 +564,132 @@ section .title::after {
   background: #fff;
   border-radius: 6px;
   width: 450px;
-  height: 320px;
+  height: 350px;
   box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.3);
   text-align: center;
   overflow: hidden;
   transition: all 0.3s ease;
   margin: 20px;
+  opacity: 0;
 }
-.projects .container .card:hover {
-  background: crimson;
+.projects .project__container .card:hover {
+  background: whitesmoke;
+  /* color: white; */
 }
-.projects .container .card .box {
+.projects .project__container .card .box {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   transition: all 0.3s ease;
 }
-.projects .container .card:hover .box {
-  transform: scale(1.05);
+.projects .project__container .card:hover .box {
+  transform: scale(1.03);
 }
-.projects .container .card .text {
+.projects .project__container .card .text {
   font-size: 20px;
   font-weight: 600;
   margin: 10px 0 7px 0;
 }
-.projects .container .card p {
-  font-size: 14px;
+.projects .project__container .card p {
+  font-size: 13px;
   font-weight: 400;
   margin: 10px 15px;
 }
 
-.projects .container .card img {
+.projects .project__container .card img {
   height: 200px;
   width: 100%;
   object-fit: cover;
   transition: all 0.3s ease;
 }
-.projects .container .card:hover img {
+.projects .project__container .card:hover img {
   border-color: #fff;
 }
 
-/* Key frames */
+/* =========================== Contact Section ===================== */
+.contact .title::after {
+  content: "get in touch";
+}
+
+.contact-container {
+  width: 100%;
+  height: 80vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  align-content: center;
+  text-align: center;
+  flex-wrap: wrap;
+}
+
+#contact p {
+  font-size: 20px;
+  font-weight: 600;
+}
+.socials {
+  display: flex;
+  justify-content: space-evenly;
+  width: 600px;
+  flex-wrap: wrap;
+}
+
+.socials a {
+  text-decoration: none;
+  color: whitesmoke;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border-bottom: 1px solid whitesmoke;
+  box-shadow: 2px 0px 6px rgba(245, 245, 245, 0.3);
+  animation: bounce 1.5s ease-in;
+  animation-direction: alternate;
+  animation-timing-function: cubic-bezier(0.5, 0.05, 1, 0.5);
+  animation-iteration-count: infinite;
+}
+
+.socials a:hover {
+  transform: scale(1.175);
+  transition: 0.2s ease-in;
+}
+
+.socials a span {
+  font-size: 28px;
+  text-align: center;
+}
+
+.contact-quote {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 20px 0;
+}
+
+.contact-quote i {
+  font-size: 50px;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+  animation: App-logo-spin infinite 5s linear;
+}
+
+.contact-quote p {
+  padding-top: 10px;
+}
+
+.footer__copy {
+  color: whitesmoke;
+  text-align: center;
+  border-top: 1px solid crimson;
+  padding-top: 10px;
+  width: 100%;
+}
+
+/* ================= Key frames ===================== */
+
 @keyframes fade-in {
   from {
     opacity: 0;
@@ -560,7 +700,16 @@ section .title::after {
 }
 @keyframes fade-in-down {
   from {
-    transform: translateY(-2.5rem);
+    transform: translateY(-2.5rem) rotateZ(-15deg);
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+@keyframes fade-in-up {
+  from {
+    transform: translateY(2.5rem);
   }
   to {
     transform: translateY(0);
@@ -577,7 +726,31 @@ section .title::after {
   }
 }
 
-/* responsive media query start */
+@keyframes bounce {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(0, 7px, 0);
+  }
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .fade-in {
+    animation: fade-in-down ease-in 0.5s 1s forwards;
+  }
+}
+
+/*  ============== responsive media query start ================== */
 @media (max-width: 1104px) {
   .about .about-content .left img {
     height: 350px;
@@ -624,11 +797,11 @@ section .title::after {
     width: 100%;
     margin-bottom: 35px;
   }
-  .projects .container .card {
+  .projects .project__container .card {
     width: 390px;
     height: 200px;
   }
-  .projects .container .card img {
+  .projects .project__container .card img {
     height: 140px;
     width: 100%;
   }
@@ -667,35 +840,44 @@ section .title::after {
     margin: 20px 0;
     font-size: 25px;
   }
-  .vd,
-  .fd,
-  .cm {
+  .card__box {
     margin: 0.7rem;
     height: 335px;
     width: 270px;
     line-height: 1.3;
   }
-  .vd span,
-  .fd span,
-  .cm span {
+  .card__box span {
     top: 180px;
     font-size: 13px;
     background-color: rgba(0, 0, 0, 0.5);
   }
-  .vd h4,
-  .fd h4,
-  .cm h4 {
+  .card__box h4 {
     top: 150px;
     font-size: 16px;
   }
 
-  .projects .container .card {
+  .projects .project__container .card {
     width: 320px;
     height: 200px;
   }
-  .projects .container .card img {
+  .projects .project__container .card img {
     height: 120px;
     width: 100%;
+  }
+  .projects .project__container .card .text {
+    font-size: 17px;
+  }
+  .projects .project__container .card p {
+    font-size: 12px;
+    font-weight: 400;
+    margin: 10px;
+  }
+  #contact p {
+    font-size: 15px;
+    font-weight: 600;
+  }
+  .socials {
+    width: 600px;
   }
 }
 
@@ -720,25 +902,38 @@ section .title::after {
     width: 250px;
     line-height: 1.3;
   }
-  .vd span,
-  .fd span,
-  .cm span {
+  .card__box span {
     top: 160px;
     font-size: 12px;
   }
-  .vd h4,
-  .fd h4,
-  .cm h4 {
+  .card__box h4 {
     top: 140px;
     font-size: 14px;
   }
-  .projects .container .card {
+  .projects .project__container .card {
     width: 450px;
     height: 300px;
   }
-  .projects .container .card img {
+  .projects .project__container .card img {
     height: 200px;
     width: 100%;
+  }
+  .projects .project__container .card .text {
+    font-size: 15px;
+  }
+  .projects .project__container .card p {
+    font-size: 10px;
+  }
+  .project-info {
+    font-size: 12px;
+  }
+
+  #contact p {
+    font-size: 14px;
+    font-weight: 600;
+  }
+  .socials {
+    width: 480px;
   }
 }
 
@@ -763,11 +958,17 @@ section .title::after {
   .right form .error-box {
     width: 150px;
   }
-  .projects .container .card {
+
+  .card__box span {
+    top: 160px;
+    font-size: 10px;
+  }
+
+  .projects .project__container .card {
     width: 300px;
     height: 200px;
   }
-  .projects .container .card img {
+  .projects .project__container .card img {
     height: 150px;
     width: 100%;
   }
@@ -778,5 +979,41 @@ section .title::after {
     width: 35px;
     font-size: 23px;
     line-height: 38px;
+  }
+
+  #contact p {
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .socials {
+    width: 380px;
+  }
+  .socials a {
+    width: 40px;
+    height: 40px;
+  }
+
+  .socials a:hover {
+    transform: scale(1.055);
+  }
+
+  .socials a span {
+    font-size: 24px;
+  }
+}
+@media (max-width: 400px) {
+  .projects .project__container .card {
+    width: 280px;
+    height: 300px;
+  }
+  .projects .project__container .card img {
+    height: 150px;
+    width: 100%;
+  }
+  #contact p {
+    font-size: 12px;
+  }
+  .socials {
+    width: 300px;
   }
 }
